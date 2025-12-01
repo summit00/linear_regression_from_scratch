@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+.mypy_cache/
+.ipynb_checkpoints/
+*.pyc
+
+# Environments / tools
+.venv/
+venv/
+.idea/
+.vscode/
