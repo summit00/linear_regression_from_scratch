@@ -3,6 +3,19 @@
 ## Overview
 This projects shows a custom implementation of the linear regression algorithm using gradient descent. You can checkou tmy repo and use the class in one of your projects. IN the repo is also a step by step comparison with the scikit-learn implementation.
 
+## Getting startet
+- install uv
+```
+pip install uv
+```
+
+- installl everything
+```
+uv synch
+```
+
+
+
 ## Project Structure
 - `source/linear_regression.py`: implementation of `LinearRegressionGD`
 - `notebooks/linear_regression.ipynb`: step by step walkthrough
