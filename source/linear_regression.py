@@ -1,5 +1,6 @@
 """Costum implementation of Linear Regression using Gradient Descent."""
 import numpy as np
+import numpy.typing as npt
 
 
 class LinearRegressionGD:
@@ -34,7 +35,11 @@ class LinearRegressionGD:
       model.score(X, y)  # R^2
     """
 
-    def __init__(self, lr=0.01, epochs=1000, loss='mse', delta=1.0, verbose=False):
+    def __init__(self, lr: float = 0.01,
+                 epochs: int = 1000,
+                 loss: str = 'mse',
+                 delta: float = 1.0,
+                 verbose: bool = False) -> None:
         """Initialize the LinearRegressionGD model.
 
         Args:
@@ -53,7 +58,7 @@ class LinearRegressionGD:
         # parameters
         self.w = 0.0
         self.b = 0.0
-        self.loss_history = []
+        self.loss_history = list[float]()
 
         # map loss name -> (loss_fn, grad_fn)
         self._loss_map = {
@@ -65,15 +70,15 @@ class LinearRegressionGD:
             raise ValueError(f"Unknown loss '{loss}'. choose from {list(self._loss_map.keys())}")
 
 
-    def fit(self, x, y):
+    def fit(self, x: npt.ArrayLike, y: npt.ArrayLike) -> None:
         """Train the model using batch (vectorized) gradient descent.
 
         Args:
             x (array-like): Input features (1D array).
             y (array-like): Target values (1D array).
         """
-        x = np.asarray(x).reshape(-1)
-        y = np.asarray(y).reshape(-1)
+        x = np.asarray(x, dtype=np.float64).reshape(-1)
+        y = np.asarray(y, dtype=np.float64).reshape(-1)
         m = len(y)
         if m == 0:
             raise ValueError('Empty dataset')
@@ -102,19 +107,12 @@ class LinearRegressionGD:
             if self.verbose and (epoch % max(1, (self.epochs // 10)) == 0):
                 print(f"[{self.loss.upper()}] epoch={epoch:4d} loss={loss:.6f} w={self.w:.4f} b={self.b:.4f}")
 
-    def predict(self, x):
-        """Predict target values for given input x.
+    def predict(self, x: npt.ArrayLike) -> npt.NDArray[np.float64]:
+        """Predict target values for given input x."""
+        x_ndarray = np.asarray(x, dtype=np.float64).reshape(-1)
+        return self.w * x_ndarray + self.b
 
-        Args:
-            x (array-like): Input features (1D array).
-
-        Returns:
-            np.ndarray: Predicted values.
-        """
-        x = np.asarray(x).reshape(-1)
-        return self.w * x + self.b
-
-    def score(self, x, y):
+    def score(self, x: npt.ArrayLike, y: npt.ArrayLike) -> float:
         """Compute the coefficient of determination R^2.
 
         Args:
@@ -124,14 +122,14 @@ class LinearRegressionGD:
         Returns:
             float: R^2 score.
         """
-        x = np.asarray(x).reshape(-1)
-        y = np.asarray(y).reshape(-1)
+        x = np.asarray(x, dtype=np.float64).reshape(-1)
+        y = np.asarray(y, dtype=np.float64).reshape(-1)
         y_pred = self.predict(x)
         ss_res = np.sum((y - y_pred)**2)
         ss_tot = np.sum((y - np.mean(y))**2)
         return 1.0 - ss_res / ss_tot if ss_tot != 0 else 0.0
 
-    def _mse(self, y, y_pred):
+    def _mse(self, y: npt.NDArray[np.float64], y_pred: npt.NDArray[np.float64]) -> float:
         """Compute Mean Squared Error (MSE) loss.
 
         Args:
@@ -141,9 +139,10 @@ class LinearRegressionGD:
         Returns:
             float: MSE loss.
         """
-        return np.mean((y - y_pred)**2)
+        return float(np.mean((y - y_pred)**2))
 
-    def _mse_grad(self, x, y, y_pred):
+    def _mse_grad(self, x: npt.NDArray[np.float64], y: npt.NDArray[np.float64],
+                  y_pred: npt.NDArray[np.float64]) -> tuple[float, float]:
         """Compute gradients of MSE loss with respect to w and b.
 
         Args:
@@ -159,7 +158,7 @@ class LinearRegressionGD:
         db = (-2.0 / m) * np.sum(y - y_pred)
         return dw, db
 
-    def _mae(self, y, y_pred):
+    def _mae(self, y: npt.NDArray[np.float64], y_pred: npt.NDArray[np.float64]) -> float:
         """Compute Mean Absolute Error (MAE) loss.
 
         Args:
@@ -169,9 +168,10 @@ class LinearRegressionGD:
         Returns:
             float: MAE loss.
         """
-        return np.mean(np.abs(y - y_pred))
+        return float(np.mean(np.abs(y - y_pred)))
 
-    def _mae_grad(self, x, y, y_pred):
+    def _mae_grad(self, x: npt.NDArray[np.float64], y: npt.NDArray[np.float64],
+                 y_pred: npt.NDArray[np.float64]) -> tuple[float, float]:
         """Compute subgradients of MAE loss with respect to w and b.
 
         Args:
@@ -188,7 +188,7 @@ class LinearRegressionGD:
         db = (-1.0 / m) * np.sum(sign)
         return dw, db
 
-    def _huber(self, y, y_pred):
+    def _huber(self, y: npt.NDArray[np.float64], y_pred: npt.NDArray[np.float64]) -> float:
         """Compute Huber loss.
 
         Args:
@@ -207,7 +207,8 @@ class LinearRegressionGD:
         # combine using counts to keep vectorization stable (but mean of concat is ok too)
         return (np.sum(small_loss) + np.sum(big_loss)) / len(err)
 
-    def _huber_grad(self, x, y, y_pred):
+    def _huber_grad(self, x: npt.NDArray[np.float64], y: npt.NDArray[np.float64],
+                    y_pred: npt.NDArray[np.float64]) -> tuple[float, float]:
         """Compute gradients of Huber loss with respect to w and b.
 
         Args:
@@ -225,4 +226,4 @@ class LinearRegressionGD:
         grad_per_sample = np.where(np.abs(err) <= d, -err, -d * np.sign(err))
         dw = (1.0 / m) * np.sum(x * grad_per_sample)
         db = (1.0 / m) * np.sum(grad_per_sample)
-        return dw, db
+        return float(dw), float(db)
