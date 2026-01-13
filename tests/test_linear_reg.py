@@ -22,7 +22,7 @@ def test_init_default() -> None:
 
 def test_invalid_loss() -> None:
     """Tests if invalid loss raises ValueError."""
-    with pytest.raises(ValueError, match="Unknown loss"):
+    with pytest.raises(ValueError, match='Unknown loss'):
         LinearRegressionGD(loss='invalid_loss')
 
 def test_fit_convergence() -> None:
