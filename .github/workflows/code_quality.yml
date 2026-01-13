@@ -92,6 +92,15 @@ jobs:
           mypy . --html-report reports/quality/
         continue-on-error: true
 
+      - name: Run Tests
+        id: pytest
+        run: |
+          echo "========================================"
+          echo "Running unit tests with pytest..."
+          echo "========================================"
+          uv run pytest --cov=source --cov-report=xml:reports/quality/coverage.xml
+        continue-on-error: true
+
       # Evaluate individual quality checks
       - name: Quality Summary
         run: |
@@ -101,6 +110,7 @@ jobs:
           echo "Ruff:   ${{ steps.ruff.outcome }}"
           echo "Pylint: ${{ steps.pylint.outcome }}"
           echo "mypy:   ${{ steps.mypy.outcome }}"
+          echo "pytest: ${{ steps.pytest.outcome }}"
           echo "================================"
 
           # Check results
@@ -118,6 +128,11 @@ jobs:
 
           if [ "${{ steps.mypy.outcome }}" != "success" ]; then
             echo "::error::❌ mypy check failed."
+            ALL_SUCCESS=false
+          fi
+
+          if [ "${{ steps.pytest.outcome }}" != "success" ]; then
+            echo "::error::❌ pytest check failed."
             ALL_SUCCESS=false
           fi
 
