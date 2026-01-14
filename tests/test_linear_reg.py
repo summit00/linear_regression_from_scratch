@@ -25,9 +25,9 @@ def test_invalid_loss() -> None:
     with pytest.raises(ValueError, match='Unknown loss'):
         LinearRegressionGD(loss='invalid_loss')
 
-def test_fit_convergence() -> None:
+def test_fit_convergence(linear_data: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]) -> None:
     """Tests if model converges."""
-    x, y = linear_data()
+    x, y = linear_data
     model = LinearRegressionGD(lr=0.01, epochs=2000, loss='mse')
     model.fit(x, y)
     # Model should nearly have w=2 and b=1.
