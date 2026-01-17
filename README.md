@@ -50,7 +50,7 @@ Below is the mathematical foundation behind each component.
 
 ### Linear Regression Model
 
-For a single input feature \( x \in \mathbb{R} \), the model predicts:
+For a single input feature $$ x \in \mathbb{R} $$, the model predicts:
 
 $$
 \hat{y} = wx + b
@@ -58,8 +58,8 @@ $$
 
 Where:
 
-- \( w \): weight (slope)  
-- \( b \): bias (intercept)
+- $$ w $$: weight (slope)  
+- $$ b $$: bias (intercept)
 
 The prediction error for sample \( i \) is:
 
@@ -83,7 +83,7 @@ $$
 
 Compute the partial derivatives with respect to \( w \) and \( b \).
 
-***Gradient \( w \)***
+***Gradient $$ w $$***
 
 $$
 \frac{\partial J}{\partial w}
@@ -105,7 +105,7 @@ $$
 }
 $$
 
-**Gradient \( b \)**
+**Gradient $$ b $$**
 
 $$
 \frac{\partial e_i}{\partial b} = -1
@@ -172,7 +172,7 @@ The Huber loss is a robust loss function that behaves like:
 
 **Definition**
 
-For error \( e = y - \hat{y} \) and threshold \( \delta \):
+For error $$ e = y - \hat{y} $$ and threshold $$ \delta$$:
 
 $$
 L_\delta(e) =
@@ -254,7 +254,7 @@ $$
 
 Where:
 
-- \( \alpha \): learning rate  
+- $$ \alpha $$: learning rate  
 - gradients depend on the selected loss function
 
 This iterative optimization continues for a predefined number of epochs.
