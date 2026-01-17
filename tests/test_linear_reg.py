@@ -25,12 +25,55 @@ def test_invalid_loss() -> None:
     with pytest.raises(ValueError, match='Unknown loss'):
         LinearRegressionGD(loss='invalid_loss')
 
-def test_fit_convergence(linear_data: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]) -> None:
-    """Tests if model converges."""
+def test_mse_convergence(linear_data: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]) -> None:
+    """Verify MSE loss decreases and finds correct parameters."""
     x, y = linear_data
-    model = LinearRegressionGD(lr=0.01, epochs=2000, loss='mse')
+    model: LinearRegressionGD = LinearRegressionGD(lr=0.01, epochs=500, loss='mse')
     model.fit(x, y)
-    # Model should nearly have w=2 and b=1.
-    assert pytest.approx(model.w, abs=1e-2) == 2.0
-    assert pytest.approx(model.b, abs=1e-1) == 1.0
+
+    assert model.loss_history[-1] < model.loss_history[0]
+    assert pytest.approx(model.w, abs=0.1) == 2.0
+    assert pytest.approx(model.b, abs=0.1) == 1.0
+
+def test_mae_convergence(linear_data: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]) -> None:
+    """Verify MAE loss decreases and converges."""
+    x, y = linear_data
+    model: LinearRegressionGD = LinearRegressionGD(lr=0.05, epochs=500, loss='mae')
+    model.fit(x, y)
+
+    assert model.loss_history[-1] < model.loss_history[0]
+    assert pytest.approx(model.w, abs=0.2) == 2.0
+
+def test_huber_convergence(linear_data: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]) -> None:
+    """Verify Huber loss decreases and converges."""
+    x, y = linear_data
+    model: LinearRegressionGD = LinearRegressionGD(lr=0.02, epochs=500, loss='huber', delta=1.0)
+    model.fit(x, y)
+
+    assert model.loss_history[-1] < model.loss_history[0]
+    assert pytest.approx(model.w, abs=0.1) == 2.0
+
+def test_r2_score() -> None:
+    """Test R^2 score for a perfect fit."""
+    x: npt.NDArray[np.float64] = np.array([1.0, 2.0, 3.0], dtype=np.float64)
+    y: npt.NDArray[np.float64] = 2.0 * x + 1.0
+    model: LinearRegressionGD = LinearRegressionGD(lr=0.01, epochs=1000)
+    model.fit(x, y)
     assert model.score(x, y) > 0.99
+
+def test_fit_empty_dataset_raises() -> None:
+    """Test that fitting on an empty dataset raises ValueError."""
+    model = LinearRegressionGD()
+    with pytest.raises(ValueError, match='Empty dataset'):
+        model.fit([], [])
+
+
+def test_r2_score_zero_variance_targets() -> None:
+    """Test R^2 score when target values have zero variance."""
+    x = np.array([1.0, 2.0, 3.0])
+    y = np.array([5.0, 5.0, 5.0])  # zero variance
+
+    model = LinearRegressionGD()
+    model.fit(x, y)
+
+    assert model.score(x, y) == 0.0

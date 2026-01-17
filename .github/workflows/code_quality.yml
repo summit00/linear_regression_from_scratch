@@ -53,7 +53,14 @@ jobs:
       # Run Tests (via uv run)
       - name: Run Tests
         id: pytest
-        run: uv run pytest --cov=source --cov-report=xml:reports/quality/coverage.xml
+        # --cov-report=term: Display the report in the CI logs
+        # --cov-fail-under=80: Fail the step if coverage < 80%
+        run: |
+          uv run pytest --cov=source \
+            --cov-report=term \
+            --cov-report=xml:reports/quality/coverage.xml \
+            --cov-fail-under=95
+        # Optional: Remove continue-on-error if you want it to fail here immediately
         continue-on-error: true
 
       # Evaluate individual quality checks
