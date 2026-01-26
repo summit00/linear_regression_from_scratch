@@ -52,9 +52,7 @@ Below is the mathematical foundation behind each component.
 
 For a single input feature $x \in \mathbb{R}$, the model predicts:
 
-$$
-\hat{y} = wx + b
-$$
+$$\hat{y} = wx + b$$
 
 Where:
 
