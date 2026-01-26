@@ -14,6 +14,7 @@ dependencies = [
     "mypy",
     "pylint",
     "pytest",
+    "pytest-cov",
     "jupyter",
     "lxml",
 ]
@@ -90,7 +91,8 @@ output-format = "text"
 
 [tool.pylint.messages_control]
 # Disable the following warnings/errors
-disable = []
+disable = ["redefined-outer-name",
+           "missing-function-docstring",]
 # Specify confidence levels for checks (options: 'HIGH', 'CONTROL_FLOW', 'INFERENCE', 'INFERENCE_FAILURE', 'UNDEFINED')
 confidence = [
     "HIGH",

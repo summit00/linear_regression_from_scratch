@@ -50,73 +50,71 @@ Below is the mathematical foundation behind each component.
 
 ### Linear Regression Model
 
-For a single input feature \( x \in \mathbb{R} \), the model predicts:
+For a single input feature $x \in \mathbb{R}$, the model predicts:
 
-\[
-\hat{y} = wx + b
-\]
+$$\hat{y} = wx + b$$
 
 Where:
 
-- \( w \): weight (slope)  
-- \( b \): bias (intercept)
+- w: weight (slope)  
+- b: bias (intercept)
 
-The prediction error for sample \( i \) is:
+The prediction error for sample "i" is:
 
-\[
+$$
 e_i = y_i - \hat{y}_i = y_i - (wx_i + b)
-\]
+$$
 
 
 ### Loss Functions
 
-The model learns parameters \(w\) and \(b\) by minimizing a chosen loss function over the dataset.
+The model learns parameters "w" and "b" by minimizing a chosen loss function over the dataset.
 
 #### Mean Squared Error (MSE)
 
-\[
+$$
 J_{\text{MSE}}(w,b) = \frac{1}{m} \sum_{i=1}^m (y_i - \hat{y}_i)^2
-\]
+$$
 
 
 **Gradient Derivation**
 
-Compute the partial derivatives with respect to \( w \) and \( b \).
+Compute the partial derivatives with respect to "w" and "b".
 
-***Gradient \( w \)***
+***Gradient w***
 
-\[
+$$
 \frac{\partial J}{\partial w}
 = \frac{1}{m} \sum 2 e_i \frac{\partial e_i}{\partial w}
-\]
+$$
 
 Since:
 
-\[
+$$
 \frac{\partial e_i}{\partial w} = -x_i
-\]
+$$
 
 We obtain:
 
-\[
+$$
 \boxed{
 \frac{\partial J}{\partial w}
 = -\frac{2}{m} \sum_{i=1}^m x_i (y_i - \hat{y}_i)
 }
-\]
+$$
 
-**Gradient \( b \)**
+**Gradient b**
 
-\[
+$$
 \frac{\partial e_i}{\partial b} = -1
-\]
+$$
 
-\[
+$$
 \boxed{
 \frac{\partial J}{\partial b}
 = -\frac{2}{m} \sum_{i=1}^m (y_i - \hat{y}_i)
 }
-\]
+$$
 
 ---
 
@@ -124,43 +122,43 @@ We obtain:
 
 **Definition**
 
-\[
+$$
 J_{\text{MAE}}(w,b) = \frac{1}{m} \sum_{i=1}^m |y_i - \hat{y}_i|
-\]
+$$
 
 MAE is **not differentiable** at 0, so we use the ubgradient:
 
-\[
+$$
 \frac{d}{de}|e| =
 \begin{cases}
 +1 & e > 0 \\
 -1 & e < 0 \\
 \text{anything in } [-1,1] & e = 0
 \end{cases}
-\]
+$$
 
 Compactly using the sign function:
 
-\[
+$$
 \text{sign}(e_i)
-\]
+$$
 
 
 **Subgradient Derivatives**
 
-\[
+$$
 \boxed{
 \frac{\partial J}{\partial w}
 = -\frac{1}{m}\sum_{i=1}^m x_i \,\text{sign}(y_i - \hat{y}_i)
 }
-\]
+$$
 
-\[
+$$
 \boxed{
 \frac{\partial J}{\partial b}
 = -\frac{1}{m}\sum_{i=1}^m \text{sign}(y_i - \hat{y}_i)
 }
-\]
+$$
 
 
 #### Huber Loss
@@ -172,21 +170,21 @@ The Huber loss is a robust loss function that behaves like:
 
 **Definition**
 
-For error \( e = y - \hat{y} \) and threshold \( \delta \):
+For error $e = y - \hat{y}$ and threshold $\delta$:
 
-\[
+$$
 L_\delta(e) =
 \begin{cases}
 \frac{1}{2} e^2 & \text{if } |e| \le \delta \\
 \delta |e| - \frac{1}{2}\delta^2 & \text{if } |e| > \delta
 \end{cases}
-\]
+$$
 
 The mean Huber loss:
 
-\[
+$$
 J_{\text{Huber}} = \frac{1}{m} \sum_{i=1}^m L_\delta(e_i)
-\]
+$$
 
 ---
 
@@ -195,27 +193,27 @@ J_{\text{Huber}} = \frac{1}{m} \sum_{i=1}^m L_\delta(e_i)
 We compute the derivative of the loss w.r.t prediction:
 **Case 1 — Quadratic region (|e| ≤ δ)**
 
-\[
+$$
 L = \frac{1}{2}e^2
-\]
-\[
+$$
+$$
 \frac{dL}{d\hat{y}} = -e
-\]
+$$
 
 **Case 2 — Linear region (|e| > δ)**
 
-\[
+$$
 L = \delta |e| - \frac{1}{2}\delta^2
-\]
-\[
+$$
+$$
 \frac{dL}{d\hat{y}} = -\delta \,\text{sign}(e)
-\]
+$$
 
 ---
 
 **Final Gradients**
 
-\[
+$$
 \boxed{
 \frac{\partial J}{\partial w} =
 \frac{1}{m} \sum_{i=1}^m
@@ -225,9 +223,9 @@ x_i
 -\delta\,\text{sign}(e_i) & |e_i| > \delta
 \end{cases}
 }
-\]
+$$
 
-\[
+$$
 \boxed{
 \frac{\partial J}{\partial b} =
 \frac{1}{m} \sum_{i=1}^m
@@ -236,7 +234,7 @@ x_i
 -\delta\,\text{sign}(e_i) & |e_i| > \delta
 \end{cases}
 }
-\]
+$$
 
 ---
 
@@ -244,17 +242,17 @@ x_i
 
 For every epoch, parameters are updated using:
 
-\[
+$$
 w \leftarrow w - \alpha \frac{\partial J}{\partial w}
-\]
+$$
 
-\[
+$$
 b \leftarrow b - \alpha \frac{\partial J}{\partial b}
-\]
+$$
 
 Where:
 
-- \( \alpha \): learning rate  
+- $\alpha$: learning rate  
 - gradients depend on the selected loss function
 
 This iterative optimization continues for a predefined number of epochs.
