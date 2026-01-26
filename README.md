@@ -81,7 +81,7 @@ $$
 
 Compute the partial derivatives with respect to "w" and "b".
 
-***Gradient w ***
+***Gradient w***
 
 $$
 \frac{\partial J}{\partial w}
@@ -103,7 +103,7 @@ $$
 }
 $$
 
-**Gradient $ b $**
+**Gradient b**
 
 $$
 \frac{\partial e_i}{\partial b} = -1
@@ -170,7 +170,7 @@ The Huber loss is a robust loss function that behaves like:
 
 **Definition**
 
-For error $e = y - \hat{y}$ and threshold $ \delta$:
+For error $e = y - \hat{y}$ and threshold $\delta$:
 
 $$
 L_\delta(e) =
