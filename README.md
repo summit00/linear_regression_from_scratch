@@ -56,10 +56,10 @@ $$\hat{y} = wx + b$$
 
 Where:
 
-- $ w $: weight (slope)  
-- $ b $: bias (intercept)
+- w: weight (slope)  
+- b: bias (intercept)
 
-The prediction error for sample \( i \) is:
+The prediction error for sample "i" is:
 
 $$
 e_i = y_i - \hat{y}_i = y_i - (wx_i + b)
@@ -68,7 +68,7 @@ $$
 
 ### Loss Functions
 
-The model learns parameters \(w\) and \(b\) by minimizing a chosen loss function over the dataset.
+The model learns parameters "w" and "b" by minimizing a chosen loss function over the dataset.
 
 #### Mean Squared Error (MSE)
 
@@ -79,9 +79,9 @@ $$
 
 **Gradient Derivation**
 
-Compute the partial derivatives with respect to \( w \) and \( b \).
+Compute the partial derivatives with respect to "w" and "b".
 
-***Gradient $ w $***
+***Gradient w ***
 
 $$
 \frac{\partial J}{\partial w}
@@ -170,7 +170,7 @@ The Huber loss is a robust loss function that behaves like:
 
 **Definition**
 
-For error $ e = y - \hat{y} $ and threshold $ \delta$:
+For error $e = y - \hat{y}$ and threshold $ \delta$:
 
 $$
 L_\delta(e) =
@@ -252,7 +252,7 @@ $$
 
 Where:
 
-- $ \alpha $: learning rate  
+- $\alpha$: learning rate  
 - gradients depend on the selected loss function
 
 This iterative optimization continues for a predefined number of epochs.
